@@ -18,25 +18,27 @@ import ConfirmOrder from "./component/cart/ConfirmOrder";
 import UpdatePassword from "./component/user/UpdatePassword";
 import Payment from "./component/cart/Payment";
 import axios from "axios";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import Success from "./component/user/Success";
 
 function App() {
+  //apyment apikey get
+  const [stripeApikey, setStripeApiKey] = useState("");
+
+  async function getStripeApikey() {
+    const { data } = await axios.get("/stripeapikey");
+    console.log(data);
+    setStripeApiKey(data.stripeApiKey);
+  }
+  console.log(stripeApikey);
+
   const dispatch = useDispatch();
-
-   //apyment apikey get
-   const [stripeApikey, setStripeApiKey] = useState('')
-
-   async function getStripeApikey() {
-     const {data} = await axios.get('/stripeapikey')
-     setStripeApiKey(data.stripeApikey)
-   }
-   console.log(stripeApikey)
 
   useEffect(() => {
     dispatch(loadUser());
-    getStripeApikey()
+    getStripeApikey();
   }, [dispatch]);
-
- 
 
   return (
     <>
@@ -47,12 +49,22 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/updateprofile" element={<UpdateProfile/>}/>
-        <Route path="/updatepasword" element={<UpdatePassword/>}/>
-        <Route path="/shipping" element={<Shipping/>}/>
-        <Route  path="/order/confirm" element={<ConfirmOrder/>}/>
-        <Route path="/payment" element={<Payment/>}/>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/updateprofile" element={<UpdateProfile />} />
+        <Route path="/updatepasword" element={<UpdatePassword />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/order/confirm" element={<ConfirmOrder />} />
+        <Route path="/success" element={<Success/>}/>
+        {stripeApikey && (
+          <Route
+            path="/payment"
+            element={
+              <Elements stripe={loadStripe(stripeApikey)}>
+                <Payment />
+              </Elements>
+            }
+          />
+        )}
       </Routes>
       <Footer />
     </>

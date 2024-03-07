@@ -1,6 +1,6 @@
 import React from "react";
 import {useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../App.css";
 import Message from "../layouts/Message";
 import Loading from "../layouts/Loading";
@@ -10,12 +10,24 @@ function ConfirmOrder() {
     const { shippingInfo, cartItems } = useSelector(state => state.cart)
     const { user} = useSelector(state => state.auth)
     const {loading,error } = useSelector(state => state.user)
+    const navigate = useNavigate()
 
     // calculate order price
     const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
     const shippingPrice = itemsPrice > 200 ? 0 : 25
     const taxPrice = Number((0.05 * itemsPrice).toFixed(2))
     const totalPrice = (itemsPrice + shippingPrice + taxPrice).toFixed(2)
+
+    const processToPayment =() => {
+      const data = {
+        itemsPrice: itemsPrice.toFixed(2),
+        shippingPrice,
+        taxPrice,
+        totalPrice
+      }
+      sessionStorage.setItem('orderInfo', JSON.stringify(data))
+      navigate('/payment')
+    }
 
   return (
     <>
@@ -96,7 +108,7 @@ function ConfirmOrder() {
             <hr />
 
             <Link to={'/payment'}>
-            <button id="checkout_btn" className="btn btn-primary btn-block">
+            <button id="checkout_btn" className="btn btn-primary btn-block" onClick={processToPayment}>
               Proceed to Payment
             </button>
             

@@ -89,9 +89,9 @@ const Shipping = () => {
                                 required
                             >
                                 <option>
-                                    seletc country
+                                    select country
                                 </option>
-                                <option value='india'>
+                                <option value='in'>
                                     India
                                 </option>
 

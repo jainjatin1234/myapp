@@ -10,9 +10,6 @@ const Cart = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   console.log(cartItems);
 
-
-
-
   const decreaseQuantity = (id, quantity) => {
     const newQty = quantity - 1;
     if (1 >= quantity) {
@@ -20,7 +17,6 @@ const Cart = () => {
     }
     dispatch(addItemsTocart(id, newQty));
   };
-
 
   const increaseQuantity = (id, quantity, stock) => {
     const newQty = quantity + 1;
@@ -30,20 +26,19 @@ const Cart = () => {
     dispatch(addItemsTocart(id, newQty));
   };
 
-const removeCardHandler = (id) =>{
-  dispatch(removeCartItems(id))
-}
+  const removeCardHandler = (id) => {
+    dispatch(removeCartItems(id));
+  };
 
-const checkOutHandler = () => {
-  // alert('hello')
+  const checkOutHandler = () => {
+    // alert('hello')
 
-  if(isAuthenticated){
-    navigate('/shipping')
-  }
-  else{
-    navigate('/login')
-  }
-};
+    if (isAuthenticated) {
+      navigate("/shipping");
+    } else {
+      navigate("/login");
+    }
+  };
   return (
     <>
       {/* Breadcrumb Start */}
@@ -96,7 +91,7 @@ const checkOutHandler = () => {
                           <button
                             className="btn btn-sm btn-primary btn-minus"
                             onClick={() =>
-                              decreaseQuantity(c.product, c.quantity,c.stock)
+                              decreaseQuantity(c.product, c.quantity, c.stock)
                             }
                           >
                             <i className="fa fa-minus"></i>
@@ -121,8 +116,12 @@ const checkOutHandler = () => {
                     </td>
                     <td className="align-middle">{c.price * c.quantity}</td>
                     <td className="align-middle">
-                      <button className="btn btn-sm btn-danger"  onClick={()=> removeCardHandler(c.product, c.quantity, c.stock)}>
-                       
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() =>
+                          removeCardHandler(c.product, c.quantity, c.stock)
+                        }
+                      >
                         <i className="fa fa-times"></i>
                       </button>
                     </td>
